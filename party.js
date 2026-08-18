@@ -250,6 +250,7 @@ function renderPlay(state) {
 
 /* ---------------- ENDED ---------------- */
 const finalLeaderboard = document.getElementById("finalLeaderboard");
+const globalLeaderboardList = document.getElementById("globalLeaderboardList");
 document.getElementById("restartBtn").addEventListener("click", () => {
   clearSession();
   stopPolling();
@@ -266,6 +267,31 @@ function renderEnded(state) {
       '<span class="lb-score">' + p.score + "</span>";
     finalLeaderboard.appendChild(li);
   });
+  loadGlobalLeaderboard();
+}
+
+async function loadGlobalLeaderboard() {
+  globalLeaderboardList.innerHTML = '<li class="leaderboard-empty">A carregar…</li>';
+  try {
+    const res = await fetch("/api/leaderboard");
+    const data = await res.json();
+    const entries = data.leaderboard || [];
+    globalLeaderboardList.innerHTML = "";
+    if (entries.length === 0) {
+      globalLeaderboardList.innerHTML = '<li class="leaderboard-empty">Ainda ninguém pontuou.</li>';
+      return;
+    }
+    entries.forEach((entry, i) => {
+      const li = document.createElement("li");
+      li.innerHTML =
+        '<span class="lb-rank">#' + (i + 1) + '</span>' +
+        '<span class="lb-name">' + escapeHtml(entry.name) + "</span>" +
+        '<span class="lb-score">' + entry.score + "</span>";
+      globalLeaderboardList.appendChild(li);
+    });
+  } catch (e) {
+    globalLeaderboardList.innerHTML = '<li class="leaderboard-empty">Não foi possível carregar.</li>';
+  }
 }
 
 /* ---------------- polling / dispatch ---------------- */
