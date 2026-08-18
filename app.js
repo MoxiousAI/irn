@@ -27,11 +27,6 @@ const nextBtn = document.getElementById("nextBtn");
 const scoreVal = document.getElementById("scoreVal");
 const streakVal = document.getElementById("streakVal");
 const bestVal = document.getElementById("bestVal");
-const playerNameInput = document.getElementById("playerNameInput");
-const leaderboardBtn = document.getElementById("leaderboardBtn");
-const leaderboardOverlay = document.getElementById("leaderboardOverlay");
-const leaderboardList = document.getElementById("leaderboardList");
-const closeLeaderboardBtn = document.getElementById("closeLeaderboardBtn");
 
 function shuffle(arr) {
   const a = arr.slice();
@@ -83,7 +78,6 @@ function answer(guessReal) {
     score += 1;
     streak += 1;
     if (streak > best) best = streak;
-    submitScoreDebounced();
   } else {
     streak = 0;
   }
@@ -188,87 +182,6 @@ function tickConfetti() {
     ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
   }
 }
-
-/* ---- player name (persisted) + global leaderboard ---- */
-const NAME_KEY = "carimba_player_name";
-playerNameInput.value = localStorage.getItem(NAME_KEY) || "";
-playerNameInput.addEventListener("input", () => {
-  localStorage.setItem(NAME_KEY, playerNameInput.value.trim());
-});
-
-let submitInFlight = false;
-let submitPending = false;
-
-function submitScoreDebounced() {
-  const name = playerNameInput.value.trim();
-  if (!name) return; // no name set — still play locally, just don't appear on the board
-  if (submitInFlight) {
-    submitPending = true;
-    return;
-  }
-  submitInFlight = true;
-  fetch("/api/leaderboard-submit", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ name, score }),
-  })
-    .catch(() => {}) // best-effort — never blocks gameplay
-    .finally(() => {
-      submitInFlight = false;
-      if (submitPending) {
-        submitPending = false;
-        submitScoreDebounced();
-      }
-    });
-}
-
-function renderLeaderboard(entries) {
-  leaderboardList.innerHTML = "";
-  if (!entries || entries.length === 0) {
-    const empty = document.createElement("li");
-    empty.className = "leaderboard-empty";
-    empty.textContent = "Ainda ninguém pontuou. Sê o primeiro!";
-    leaderboardList.appendChild(empty);
-    return;
-  }
-  entries.forEach((entry, i) => {
-    const li = document.createElement("li");
-    const rank = document.createElement("span");
-    rank.className = "lb-rank";
-    rank.textContent = "#" + (i + 1);
-    const name = document.createElement("span");
-    name.className = "lb-name";
-    name.textContent = entry.name;
-    const sc = document.createElement("span");
-    sc.className = "lb-score";
-    sc.textContent = entry.score;
-    li.appendChild(rank);
-    li.appendChild(name);
-    li.appendChild(sc);
-    leaderboardList.appendChild(li);
-  });
-}
-
-async function openLeaderboard() {
-  leaderboardOverlay.hidden = false;
-  leaderboardList.innerHTML = '<li class="leaderboard-empty">A carregar…</li>';
-  try {
-    const res = await fetch("/api/leaderboard");
-    const data = await res.json();
-    renderLeaderboard(data.leaderboard);
-  } catch (e) {
-    leaderboardList.innerHTML = '<li class="leaderboard-empty">Não foi possível carregar a leaderboard.</li>';
-  }
-}
-
-leaderboardBtn.addEventListener("click", openLeaderboard);
-closeLeaderboardBtn.addEventListener("click", () => { leaderboardOverlay.hidden = true; });
-leaderboardOverlay.addEventListener("click", (e) => {
-  if (e.target === leaderboardOverlay) leaderboardOverlay.hidden = true;
-});
-document.addEventListener("keydown", (e) => {
-  if (e.key === "Escape" && !leaderboardOverlay.hidden) leaderboardOverlay.hidden = true;
-});
 
 refillDeck();
 nextRound();
