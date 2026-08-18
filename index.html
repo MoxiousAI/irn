@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carimba o Nome</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Baloo+2:wght@500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="confetti-field" aria-hidden="true">
+  <span class="shape tri s1"></span>
+  <span class="shape circle s2"></span>
+  <span class="shape square s3"></span>
+  <span class="shape ring s4"></span>
+  <span class="shape circle s5"></span>
+  <span class="shape tri s6"></span>
+  <span class="shape square s7"></span>
+  <span class="shape ring s8"></span>
+</div>
+<canvas id="confettiCanvas"></canvas>
+
+<div class="stage">
+  <div class="masthead">
+    <div class="brand">Carimba o Nome</div>
+    <div class="tagline">registo genuíno ou invenção estatística?</div>
+  </div>
+
+  <div class="scoreboard">
+    <div class="score-cell"><span class="v" id="scoreVal">0/0</span><span class="l">acertos</span></div>
+    <div class="score-cell"><span class="v" id="streakVal">0</span><span class="l">sequência</span></div>
+    <div class="score-cell"><span class="v" id="bestVal">0</span><span class="l">melhor</span></div>
+  </div>
+
+  <div class="card" id="card">
+    <span class="gender-tag" id="genderTag">Feminino</span>
+    <div class="name-display" id="nameDisplay">&nbsp;</div>
+    <p class="prompt" id="promptLine">Este nome consta no registo oficial de Portugal?</p>
+    <div class="stamp-overlay" id="stampOverlay">
+      <div class="stamp-mark" id="stampMark"></div>
+      <div class="verdict-line" id="verdictLine"></div>
+    </div>
+  </div>
+
+  <div class="answers">
+    <button class="answer-btn real-btn" id="btnReal" type="button">Nome real</button>
+    <button class="answer-btn fake-btn" id="btnFake" type="button">Invenção</button>
+  </div>
+
+  <button class="next-btn" id="nextBtn" type="button">Seguinte nome →</button>
+
+  <a class="party-mode-btn" href="party.html">🎉 Modo Festa — joga com até 8 pessoas</a>
+
+  <footer>7 481 nomes reais do registo civil português, contra 7 481 inventados por um modelo estatístico e verificados um a um. &middot; Setas ← / → para responder, Enter para continuar.</footer>
+
+  <div class="irn-badge">
+    <img src="irn_logo.png" alt="Instituto dos Registos e do Notariado" class="irn-logo">
+    <div class="irn-banner">Não compactuamos com o IRN</div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,418 @@
+:root{
+  --bg1:#1B0F3D;
+  --bg2:#3D1580;
+  --bg3:#5C1AA6;
+  --panel:#FFFBF3;
+  --panel-2:#FFFFFF;
+  --ink:#1B0F3D;
+  --ink-soft:#5B4E86;
+  --line:#1B0F3D;
+  --pink:#FF3E7F;
+  --yellow:#FFD23F;
+  --cyan:#29E0D8;
+  --purple:#8C4DFF;
+  --verified:#2FD07F;
+  --verified-dark:#1C9E5D;
+  --apocryphal:#FF4B6E;
+  --apocryphal-dark:#D6335A;
+  --focus:#FFD23F;
+  --hard-shadow: 6px 6px 0 var(--ink);
+  --hard-shadow-sm: 4px 4px 0 var(--ink);
+}
+
+/* Jackbox-style party palette holds for both OS themes on purpose:
+   the stage itself is the "set", not a light/dark document. */
+:root[data-theme="light"]{ --panel:#FFFBF3; }
+:root[data-theme="dark"]{ --panel:#FFFBF3; }
+
+*{ box-sizing:border-box; }
+body{
+  margin:0;
+  color:var(--ink);
+  font-family:"Baloo 2", ui-rounded, "Segoe UI", sans-serif;
+  min-height:100vh;
+  padding:2.5rem 1rem;
+  position:relative;
+  overflow-x:hidden;
+  background:
+    radial-gradient(circle at 15% 20%, var(--bg3) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, var(--bg2) 0%, transparent 50%),
+    linear-gradient(160deg, var(--bg1) 0%, var(--bg2) 55%, var(--bg1) 100%);
+  background-color:var(--bg1);
+}
+
+/* ---- floating decorative shapes ---- */
+.confetti-field{
+  position:fixed;
+  inset:0;
+  overflow:hidden;
+  pointer-events:none;
+  z-index:0;
+}
+.shape{
+  position:absolute;
+  opacity:0.5;
+  animation:drift 9s ease-in-out infinite;
+}
+.shape.tri{
+  width:0; height:0;
+  border-left:22px solid transparent;
+  border-right:22px solid transparent;
+  border-bottom:38px solid var(--cyan);
+}
+.shape.circle{
+  width:34px; height:34px;
+  border-radius:50%;
+  background:var(--yellow);
+}
+.shape.square{
+  width:28px; height:28px;
+  border-radius:8px;
+  background:var(--pink);
+  transform:rotate(18deg);
+}
+.shape.ring{
+  width:40px; height:40px;
+  border-radius:50%;
+  border:7px solid var(--purple);
+}
+.s1{ top:8%; left:8%; animation-delay:0s; }
+.s2{ top:15%; right:10%; animation-delay:1.2s; }
+.s3{ bottom:14%; left:12%; animation-delay:2.1s; }
+.s4{ bottom:20%; right:9%; animation-delay:0.6s; }
+.s5{ top:45%; left:4%; animation-delay:1.7s; }
+.s6{ top:55%; right:5%; animation-delay:0.3s; }
+.s7{ top:6%; left:45%; animation-delay:2.6s; }
+.s8{ bottom:6%; right:40%; animation-delay:1s; }
+@keyframes drift{
+  0%,100%{ transform:translateY(0) rotate(0deg); }
+  50%{ transform:translateY(-18px) rotate(12deg); }
+}
+@media (prefers-reduced-motion: reduce){
+  .shape{ animation:none; }
+}
+
+.stage{
+  position:relative;
+  z-index:1;
+  width:100%;
+  max-width:600px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:1.4rem;
+}
+
+/* ---- masthead / logo ---- */
+.masthead{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:0.4rem;
+  text-align:center;
+  padding-top:0.5rem;
+}
+.brand{
+  font-family:"Bungee", "Baloo 2", sans-serif;
+  font-size:clamp(1.6rem, 8vw, 2.9rem);
+  line-height:1.15;
+  min-width:0;
+  max-width:100%;
+  color:var(--yellow);
+  -webkit-text-stroke:3px var(--ink);
+  paint-order:stroke fill;
+  text-shadow:4px 4px 0 var(--ink);
+  transform:rotate(-3deg);
+  letter-spacing:0.01em;
+  text-wrap:balance;
+}
+.tagline{
+  font-family:"Baloo 2", sans-serif;
+  font-weight:700;
+  font-size:0.9rem;
+  color:var(--panel);
+  background:var(--purple);
+  border:3px solid var(--ink);
+  border-radius:999px;
+  padding:0.25rem 0.9rem;
+  box-shadow:var(--hard-shadow-sm);
+  transform:rotate(1deg);
+}
+
+/* ---- scoreboard ---- */
+.scoreboard{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:0.75rem;
+}
+.score-cell{
+  min-width:0;
+  background:var(--panel-2);
+  border:3px solid var(--ink);
+  border-radius:14px;
+  box-shadow:var(--hard-shadow-sm);
+  padding:0.6rem 0.4rem;
+  text-align:center;
+  display:flex;
+  flex-direction:column;
+  gap:0.05rem;
+}
+.score-cell .l{ overflow-wrap:break-word; }
+.score-cell .v{
+  font-family:"Space Mono", ui-monospace, monospace;
+  font-variant-numeric:tabular-nums;
+  font-weight:700;
+  font-size:1.35rem;
+  color:var(--bg2);
+}
+.score-cell .l{
+  font-family:"Baloo 2", sans-serif;
+  font-weight:700;
+  font-size:0.62rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.score-cell:nth-child(2) .v{ color:var(--pink); }
+.score-cell:nth-child(3) .v{ color:var(--verified-dark); }
+
+/* ---- name card ---- */
+.card{
+  position:relative;
+  background:var(--panel);
+  border:5px solid var(--ink);
+  border-radius:24px;
+  box-shadow:var(--hard-shadow);
+  padding:2.6rem 1.75rem 2.1rem;
+  min-height:250px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0.9rem;
+  overflow:hidden;
+  text-align:center;
+  transition:transform 120ms ease;
+}
+.card.shake{ animation:shake 420ms ease; }
+@keyframes shake{
+  0%,100%{ transform:translateX(0); }
+  20%{ transform:translateX(-10px) rotate(-1deg); }
+  40%{ transform:translateX(9px) rotate(1deg); }
+  60%{ transform:translateX(-6px); }
+  80%{ transform:translateX(6px); }
+}
+@media (prefers-reduced-motion: reduce){
+  .card.shake{ animation:none; }
+}
+
+.gender-tag{
+  font-family:"Baloo 2", sans-serif;
+  font-weight:700;
+  font-size:0.72rem;
+  letter-spacing:0.06em;
+  text-transform:uppercase;
+  color:var(--panel-2);
+  background:var(--cyan);
+  border:2.5px solid var(--ink);
+  border-radius:999px;
+  padding:0.2rem 0.75rem;
+}
+.name-display{
+  font-family:"Bungee", "Baloo 2", sans-serif;
+  font-size:clamp(1.6rem, 9vw, 2.75rem);
+  line-height:1.05;
+  min-width:0;
+  color:var(--ink);
+  text-wrap:balance;
+  word-break:break-word;
+  max-width:100%;
+}
+.prompt{
+  font-family:"Baloo 2", sans-serif;
+  font-weight:600;
+  font-size:0.9rem;
+  color:var(--ink-soft);
+}
+
+/* ---- stamp reveal ---- */
+.stamp-overlay{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  pointer-events:none;
+  opacity:0;
+  background:rgba(255,251,243,0.92);
+}
+.stamp-overlay.show{ opacity:1; }
+.stamp-mark{
+  font-family:"Bungee", sans-serif;
+  font-size:clamp(1.5rem, 8vw, 2.2rem);
+  letter-spacing:0.02em;
+  text-transform:uppercase;
+  border:5px solid var(--ink);
+  border-radius:16px;
+  padding:0.5rem 1.2rem;
+  transform:rotate(-8deg) scale(1.6);
+  opacity:0;
+  box-shadow:var(--hard-shadow);
+}
+.stamp-overlay.show .stamp-mark{
+  animation: slam 380ms cubic-bezier(.2,1.5,.4,1) forwards;
+}
+@keyframes slam{
+  0%{ transform:rotate(-8deg) scale(2); opacity:0; }
+  55%{ transform:rotate(-8deg) scale(0.9); opacity:1; }
+  100%{ transform:rotate(-8deg) scale(1); opacity:1; }
+}
+@media (prefers-reduced-motion: reduce){
+  .stamp-overlay.show .stamp-mark{ animation:none; opacity:1; transform:rotate(-8deg) scale(1); }
+}
+.stamp-mark.real{ color:var(--verified-dark); background:var(--verified); }
+.stamp-mark.fake{ color:var(--panel); background:var(--apocryphal); }
+
+.verdict-line{
+  position:absolute;
+  bottom:1rem;
+  left:0;
+  right:0;
+  text-align:center;
+  font-family:"Baloo 2", sans-serif;
+  font-size:0.95rem;
+  font-weight:800;
+  opacity:0;
+  transition:opacity 200ms ease 170ms;
+}
+.stamp-overlay.show .verdict-line{ opacity:1; }
+.verdict-line.correct{ color:var(--verified-dark); }
+.verdict-line.wrong{ color:var(--apocryphal-dark); }
+
+/* ---- answer buttons ---- */
+.answers{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:1rem;
+}
+.answer-btn{
+  font-family:"Baloo 2", sans-serif;
+  font-size:1.1rem;
+  font-weight:800;
+  padding:1.05rem 0.75rem;
+  border-radius:16px;
+  border:4px solid var(--ink);
+  cursor:pointer;
+  color:var(--ink);
+  box-shadow:var(--hard-shadow-sm);
+  transition:transform 90ms ease, box-shadow 90ms ease;
+}
+.answer-btn:hover:not(:disabled){ transform:translate(-1px,-1px); box-shadow:6px 6px 0 var(--ink); }
+.answer-btn:active:not(:disabled){ transform:translate(3px,3px); box-shadow:0 0 0 var(--ink); }
+.answer-btn:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+.answer-btn.real-btn{ background:var(--verified); }
+.answer-btn.fake-btn{ background:var(--apocryphal); color:var(--panel); }
+.answer-btn:disabled{ cursor:default; opacity:0.5; box-shadow:none; transform:none; }
+
+/* ---- next button ---- */
+.next-btn{
+  font-family:"Baloo 2", sans-serif;
+  font-size:1rem;
+  font-weight:800;
+  padding:0.85rem 1rem;
+  border-radius:14px;
+  border:4px solid var(--ink);
+  background:var(--yellow);
+  color:var(--ink);
+  cursor:pointer;
+  box-shadow:var(--hard-shadow-sm);
+  display:none;
+  transition:transform 90ms ease, box-shadow 90ms ease;
+}
+.next-btn.show{ display:block; }
+.next-btn:hover{ transform:translate(-1px,-1px); box-shadow:6px 6px 0 var(--ink); }
+.next-btn:active{ transform:translate(3px,3px); box-shadow:0 0 0 var(--ink); }
+.next-btn:focus-visible{ outline:3px solid var(--pink); outline-offset:3px; }
+
+footer{
+  font-family:"Baloo 2", sans-serif;
+  font-weight:600;
+  font-size:0.76rem;
+  color:var(--panel);
+  text-align:center;
+  opacity:0.85;
+  padding-bottom:0.5rem;
+}
+
+/* ---- party mode CTA ---- */
+.party-mode-btn{
+  display:block;
+  text-align:center;
+  font-family:"Baloo 2", sans-serif;
+  font-weight:800;
+  font-size:1rem;
+  padding:0.9rem 1rem;
+  border-radius:14px;
+  border:4px solid var(--ink);
+  background:var(--purple);
+  color:var(--panel);
+  text-decoration:none;
+  box-shadow:var(--hard-shadow-sm);
+  transition:transform 90ms ease, box-shadow 90ms ease;
+}
+.party-mode-btn:hover{ transform:translate(-1px,-1px); box-shadow:6px 6px 0 var(--ink); }
+.party-mode-btn:active{ transform:translate(3px,3px); box-shadow:0 0 0 var(--ink); }
+.party-mode-btn:focus-visible{ outline:3px solid var(--focus); outline-offset:3px; }
+
+/* ---- IRN disclaimer badge ---- */
+.irn-badge{
+  position:fixed;
+  right:1.1rem;
+  bottom:1.1rem;
+  overflow:hidden;
+  background:var(--panel-2);
+  border:4px solid var(--ink);
+  border-radius:14px;
+  box-shadow:var(--hard-shadow-sm);
+  padding:0.7rem 0.85rem;
+  width:180px;
+  z-index:3;
+  transform:rotate(1.5deg);
+}
+.irn-logo{
+  display:block;
+  width:100%;
+  height:auto;
+}
+.irn-banner{
+  position:absolute;
+  top:50%;
+  left:50%;
+  width:150%;
+  transform:translate(-50%,-50%) rotate(-11deg);
+  background:rgba(255,75,110,0.55);
+  backdrop-filter:blur(0.5px);
+  color:var(--panel);
+  font-family:"Baloo 2", sans-serif;
+  font-weight:800;
+  font-size:0.64rem;
+  letter-spacing:0.02em;
+  text-transform:uppercase;
+  text-align:center;
+  padding:0.35rem 0;
+  border-top:3px solid var(--ink);
+  border-bottom:3px solid var(--ink);
+  text-shadow:0 1px 2px rgba(0,0,0,0.45);
+}
+@media (max-width:520px){
+  .irn-badge{ width:130px; right:0.7rem; bottom:0.7rem; padding:0.55rem 0.65rem; }
+  .irn-banner{ font-size:0.5rem; padding:0.28rem 0; }
+}
+
+/* ---- confetti burst canvas ---- */
+#confettiCanvas{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  z-index:2;
+}

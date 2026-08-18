@@ -1,0 +1,12 @@
+{
+  "name": "carimba-o-nome",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Carimba o Nome — jogo de adivinhar nomes reais vs. inventados, com modo festa multijogador.",
+  "scripts": {
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.38.2"
+  }
+}

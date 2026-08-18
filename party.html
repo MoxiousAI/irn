@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carimba o Nome — Modo Festa</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bungee&family=Baloo+2:wght@500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="party.css">
+</head>
+<body>
+
+<div class="confetti-field" aria-hidden="true">
+  <span class="shape tri s1"></span>
+  <span class="shape circle s2"></span>
+  <span class="shape square s3"></span>
+  <span class="shape ring s4"></span>
+  <span class="shape circle s5"></span>
+  <span class="shape tri s6"></span>
+  <span class="shape square s7"></span>
+  <span class="shape ring s8"></span>
+</div>
+<canvas id="confettiCanvas"></canvas>
+
+<div class="stage">
+  <div class="masthead">
+    <a class="brand brand-link" href="index.html">Carimba o Nome</a>
+    <div class="tagline">modo festa &middot; até 8 jogadores</div>
+  </div>
+
+  <!-- HOME: create or join -->
+  <section id="view-home" class="view">
+    <div class="party-card">
+      <h2>Criar uma sala</h2>
+      <input class="party-input" id="createNameInput" type="text" maxlength="24" placeholder="O teu nome">
+      <button class="answer-btn real-btn full" id="createBtn" type="button">Criar sala</button>
+    </div>
+    <div class="party-card">
+      <h2>Entrar numa sala</h2>
+      <input class="party-input code-input" id="joinCodeInput" type="text" maxlength="5" placeholder="CÓDIGO" autocapitalize="characters">
+      <input class="party-input" id="joinNameInput" type="text" maxlength="24" placeholder="O teu nome">
+      <button class="answer-btn fake-btn full" id="joinBtn" type="button">Entrar</button>
+    </div>
+    <p class="party-error" id="homeError"></p>
+  </section>
+
+  <!-- LOBBY -->
+  <section id="view-lobby" class="view" hidden>
+    <div class="room-code-card">
+      <span class="room-code-label">código da sala</span>
+      <div class="room-code" id="roomCodeDisplay">-----</div>
+      <button class="copy-btn" id="copyCodeBtn" type="button">Copiar</button>
+    </div>
+    <div class="party-card">
+      <h2>Jogadores <span id="playerCount">0/8</span></h2>
+      <ul class="player-list" id="lobbyPlayerList"></ul>
+    </div>
+    <button class="answer-btn real-btn full" id="startGameBtn" type="button" hidden>Começar jogo</button>
+    <p class="waiting-line" id="waitingLine" hidden>A aguardar que o anfitrião comece o jogo…</p>
+  </section>
+
+  <!-- PLAY -->
+  <section id="view-play" class="view" hidden>
+    <div class="party-topbar">
+      <span class="room-chip">Sala <strong id="playCode">-----</strong></span>
+      <span class="answered-chip" id="answeredChip">0/0 responderam</span>
+    </div>
+
+    <ol class="leaderboard" id="leaderboard"></ol>
+
+    <div class="card" id="card">
+      <span class="gender-tag" id="genderTag">Feminino</span>
+      <div class="name-display" id="nameDisplay">&nbsp;</div>
+      <p class="prompt" id="promptLine">Este nome consta no registo oficial de Portugal?</p>
+      <div class="stamp-overlay" id="stampOverlay">
+        <div class="stamp-mark" id="stampMark"></div>
+        <div class="verdict-line" id="verdictLine"></div>
+      </div>
+    </div>
+
+    <div class="answers">
+      <button class="answer-btn real-btn" id="btnReal" type="button">Nome real</button>
+      <button class="answer-btn fake-btn" id="btnFake" type="button">Invenção</button>
+    </div>
+    <p class="waiting-line" id="playWaitingLine" hidden>Respondeste! A aguardar os outros jogadores…</p>
+
+    <button class="answer-btn full" id="hostNextBtn" type="button" hidden>Próxima ronda →</button>
+    <button class="answer-btn fake-btn full" id="hostEndBtn" type="button" hidden>Terminar jogo</button>
+  </section>
+
+  <!-- ENDED -->
+  <section id="view-ended" class="view" hidden>
+    <h2 class="ended-title">Fim de jogo!</h2>
+    <ol class="leaderboard final" id="finalLeaderboard"></ol>
+    <button class="answer-btn real-btn full" id="restartBtn" type="button">Voltar ao início</button>
+  </section>
+
+  <footer>Modo festa &middot; partilha o código da sala com quem quiseres desafiar.</footer>
+</div>
+
+<script src="party.js"></script>
+</body>
+</html>
